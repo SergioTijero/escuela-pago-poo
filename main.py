@@ -3,7 +3,6 @@ from tkinter import messagebox
 import json
 import os
 
-
 # Funciones auxiliares para manejo de archivos
 def cargar_usuarios():
     if not os.path.exists('usuarios.txt'):
@@ -14,11 +13,9 @@ def cargar_usuarios():
         except json.JSONDecodeError:
             return []
 
-
 def guardar_usuarios(usuarios):
     with open('usuarios.txt', 'w') as file:
         json.dump(usuarios, file)
-
 
 def cargar_pagos():
     if not os.path.exists('pagos.txt'):
@@ -29,11 +26,9 @@ def cargar_pagos():
         except json.JSONDecodeError:
             return []
 
-
 def guardar_pagos(pagos):
     with open('pagos.txt', 'w') as file:
         json.dump(pagos, file)
-
 
 # Clase principal de la aplicación
 class PaymentSystemApp:
@@ -94,14 +89,12 @@ class PaymentSystemApp:
 
     def mostrar_dashboard_alumno(self):
         tk.Button(self.root, text="Realizar Pago", command=self.realizar_pago).grid(row=2, column=0)
-        tk.Button(self.root, text="Consultar Estado de Cuenta", command=self.consultar_estado_cuenta).grid(row=3,
-                                                                                                           column=0)
+        tk.Button(self.root, text="Consultar Estado de Cuenta", command=self.consultar_estado_cuenta).grid(row=3, column=0)
         tk.Button(self.root, text="Descargar Recibo", command=self.descargar_recibo).grid(row=4, column=0)
 
     def mostrar_dashboard_secretario(self):
         tk.Button(self.root, text="Realizar Pago", command=self.realizar_pago).grid(row=2, column=0)
-        tk.Button(self.root, text="Consultar Estado de Cuenta de Alumno",
-                  command=self.consultar_estado_cuenta_alumno).grid(row=3, column=0)
+        tk.Button(self.root, text="Consultar Estado de Cuenta de Alumno", command=self.consultar_estado_cuenta_alumno).grid(row=3, column=0)
         tk.Button(self.root, text="Descargar Recibo", command=self.descargar_recibo).grid(row=4, column=0)
 
     def limpiar_interfaz(self):
@@ -129,11 +122,14 @@ class PaymentSystemApp:
 
         self.email = tk.Entry(self.root)
         self.password = tk.Entry(self.root, show="*")
-        self.rol = tk.Entry(self.root)
 
         self.email.grid(row=0, column=1)
         self.password.grid(row=1, column=1)
-        self.rol.grid(row=2, column=1)
+
+        self.rol = tk.StringVar(value="alumno")
+        roles = ["admin", "alumno", "apoderado", "secretario"]
+        for idx, rol in enumerate(roles):
+            tk.Radiobutton(self.root, text=rol.capitalize(), variable=self.rol, value=rol).grid(row=2, column=1 + idx)
 
         tk.Button(self.root, text="Agregar", command=self.guardar_usuario).grid(row=3, column=1)
         tk.Button(self.root, text="Cancelar", command=self.gestionar_usuarios).grid(row=3, column=0)
@@ -203,11 +199,7 @@ class PaymentSystemApp:
         for idx, pago in enumerate(pagos_usuario, start=1):
             tk.Label(self.root, text=f"{idx}. Monto: {pago['monto']}").grid(row=idx, column=0)
 
-        tk.Button(self.root, text="Volver", command=self.mostrar_dashboard).grid(row=idx + 1, column=0)
-
-    def descargar_recibo(self):
-        # Implementar la lógica de descarga de recibos aquí
-        pass
+        tk.Button(self.root, text="Volver", command=self.mostrar_dashboard).grid(row=len(pagos_usuario) + 1, column=0)
 
     def consultar_estado_cuenta_alumno(self):
         self.limpiar_interfaz()
@@ -217,21 +209,24 @@ class PaymentSystemApp:
         self.email.grid(row=0, column=1)
 
         tk.Button(self.root, text="Consultar", command=self.mostrar_estado_cuenta_alumno).grid(row=1, column=1)
-        tk.Button(self.root, text="Cancelar", command=self.mostrar_dashboard).grid(row=1, column=0)
+        tk.Button(self.root, text="Cancelar", command=self.mostrar_dashboard_secretario).grid(row=1, column=0)
 
     def mostrar_estado_cuenta_alumno(self):
         email = self.email.get()
-        pagos_alumno = [p for p in self.pagos if p['email'] == email]
+        pagos_usuario = [p for p in self.pagos if p['email'] == email]
 
         self.limpiar_interfaz()
 
-        tk.Label(self.root, text=f"Pagos de {email}").grid(row=0, column=0)
+        tk.Label(self.root, text=f"Pagos Realizados por {email}").grid(row=0, column=0)
 
-        for idx, pago in enumerate(pagos_alumno, start=1):
+        for idx, pago in enumerate(pagos_usuario, start=1):
             tk.Label(self.root, text=f"{idx}. Monto: {pago['monto']}").grid(row=idx, column=0)
 
-        tk.Button(self.root, text="Volver", command=self.mostrar_dashboard).grid(row=idx + 1, column=0)
+        tk.Button(self.root, text="Volver", command=self.mostrar_dashboard_secretario).grid(row=len(pagos_usuario) + 1, column=0)
 
+    def descargar_recibo(self):
+        # Implementar la lógica de descarga de recibo aquí
+        pass
 
 if __name__ == "__main__":
     root = tk.Tk()
