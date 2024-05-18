@@ -3,27 +3,39 @@ from tkinter import messagebox
 import json
 import os
 
+
+# Funciones auxiliares para manejo de archivos
 def cargar_usuarios():
     if not os.path.exists('usuarios.txt'):
         return []
     with open('usuarios.txt', 'r') as file:
-        return json.load(file)
+        try:
+            return json.load(file)
+        except json.JSONDecodeError:
+            return []
+
 
 def guardar_usuarios(usuarios):
     with open('usuarios.txt', 'w') as file:
         json.dump(usuarios, file)
 
+
 def cargar_pagos():
     if not os.path.exists('pagos.txt'):
         return []
     with open('pagos.txt', 'r') as file:
-        return json.load(file)
+        try:
+            return json.load(file)
+        except json.JSONDecodeError:
+            return []
+
 
 def guardar_pagos(pagos):
     with open('pagos.txt', 'w') as file:
         json.dump(pagos, file)
 
 
+# Clase principal de la aplicación
 class PaymentSystemApp:
     def __init__(self, root):
         self.root = root
@@ -100,10 +112,59 @@ class PaymentSystemApp:
         self.usuario_actual = None
         self.crear_interfaz_login()
 
-    # Funciones adicionales para cada acción específica
     def gestionar_usuarios(self):
-        # Implementar la lógica de gestión de usuarios aquí
-        pass
+        self.limpiar_interfaz()
+        tk.Label(self.root, text="Gestionar Usuarios").grid(row=0, column=0)
+
+        tk.Button(self.root, text="Agregar Usuario", command=self.agregar_usuario).grid(row=1, column=0)
+        tk.Button(self.root, text="Eliminar Usuario", command=self.eliminar_usuario).grid(row=2, column=0)
+        tk.Button(self.root, text="Volver", command=self.mostrar_dashboard).grid(row=3, column=0)
+
+    def agregar_usuario(self):
+        self.limpiar_interfaz()
+
+        tk.Label(self.root, text="Email").grid(row=0, column=0)
+        tk.Label(self.root, text="Password").grid(row=1, column=0)
+        tk.Label(self.root, text="Rol").grid(row=2, column=0)
+
+        self.email = tk.Entry(self.root)
+        self.password = tk.Entry(self.root, show="*")
+        self.rol = tk.Entry(self.root)
+
+        self.email.grid(row=0, column=1)
+        self.password.grid(row=1, column=1)
+        self.rol.grid(row=2, column=1)
+
+        tk.Button(self.root, text="Agregar", command=self.guardar_usuario).grid(row=3, column=1)
+        tk.Button(self.root, text="Cancelar", command=self.gestionar_usuarios).grid(row=3, column=0)
+
+    def guardar_usuario(self):
+        nuevo_usuario = {
+            'email': self.email.get(),
+            'password': self.password.get(),
+            'rol': self.rol.get()
+        }
+        self.usuarios.append(nuevo_usuario)
+        guardar_usuarios(self.usuarios)
+        messagebox.showinfo("Éxito", "Usuario agregado exitosamente")
+        self.gestionar_usuarios()
+
+    def eliminar_usuario(self):
+        self.limpiar_interfaz()
+
+        tk.Label(self.root, text="Email del Usuario a Eliminar").grid(row=0, column=0)
+        self.email = tk.Entry(self.root)
+        self.email.grid(row=0, column=1)
+
+        tk.Button(self.root, text="Eliminar", command=self.confirmar_eliminar_usuario).grid(row=1, column=1)
+        tk.Button(self.root, text="Cancelar", command=self.gestionar_usuarios).grid(row=1, column=0)
+
+    def confirmar_eliminar_usuario(self):
+        email = self.email.get()
+        self.usuarios = [u for u in self.usuarios if u['email'] != email]
+        guardar_usuarios(self.usuarios)
+        messagebox.showinfo("Éxito", "Usuario eliminado exitosamente")
+        self.gestionar_usuarios()
 
     def configurar_parametros(self):
         # Implementar la lógica de configuración de parámetros aquí
@@ -114,23 +175,65 @@ class PaymentSystemApp:
         pass
 
     def realizar_pago(self):
-        # Implementar la lógica de realización de pagos aquí
-        pass
+        self.limpiar_interfaz()
+
+        tk.Label(self.root, text="Monto").grid(row=0, column=0)
+        self.monto = tk.Entry(self.root)
+        self.monto.grid(row=0, column=1)
+
+        tk.Button(self.root, text="Realizar Pago", command=self.procesar_pago).grid(row=1, column=1)
+        tk.Button(self.root, text="Cancelar", command=self.mostrar_dashboard).grid(row=1, column=0)
+
+    def procesar_pago(self):
+        nuevo_pago = {
+            'monto': self.monto.get(),
+            'email': self.usuario_actual['email']
+        }
+        self.pagos.append(nuevo_pago)
+        guardar_pagos(self.pagos)
+        messagebox.showinfo("Éxito", "Pago realizado exitosamente")
+        self.mostrar_dashboard()
 
     def consultar_estado_cuenta(self):
-        # Implementar la lógica de consulta de estado de cuenta aquí
-        pass
+        self.limpiar_interfaz()
+
+        tk.Label(self.root, text="Pagos Realizados").grid(row=0, column=0)
+        pagos_usuario = [p for p in self.pagos if p['email'] == self.usuario_actual['email']]
+
+        for idx, pago in enumerate(pagos_usuario, start=1):
+            tk.Label(self.root, text=f"{idx}. Monto: {pago['monto']}").grid(row=idx, column=0)
+
+        tk.Button(self.root, text="Volver", command=self.mostrar_dashboard).grid(row=idx + 1, column=0)
 
     def descargar_recibo(self):
         # Implementar la lógica de descarga de recibos aquí
         pass
 
     def consultar_estado_cuenta_alumno(self):
-        # Implementar la lógica de consulta de estado de cuenta de alumno aquí
-        pass
+        self.limpiar_interfaz()
+
+        tk.Label(self.root, text="Email del Alumno").grid(row=0, column=0)
+        self.email = tk.Entry(self.root)
+        self.email.grid(row=0, column=1)
+
+        tk.Button(self.root, text="Consultar", command=self.mostrar_estado_cuenta_alumno).grid(row=1, column=1)
+        tk.Button(self.root, text="Cancelar", command=self.mostrar_dashboard).grid(row=1, column=0)
+
+    def mostrar_estado_cuenta_alumno(self):
+        email = self.email.get()
+        pagos_alumno = [p for p in self.pagos if p['email'] == email]
+
+        self.limpiar_interfaz()
+
+        tk.Label(self.root, text=f"Pagos de {email}").grid(row=0, column=0)
+
+        for idx, pago in enumerate(pagos_alumno, start=1):
+            tk.Label(self.root, text=f"{idx}. Monto: {pago['monto']}").grid(row=idx, column=0)
+
+        tk.Button(self.root, text="Volver", command=self.mostrar_dashboard).grid(row=idx + 1, column=0)
+
 
 if __name__ == "__main__":
     root = tk.Tk()
     app = PaymentSystemApp(root)
     root.mainloop()
-
