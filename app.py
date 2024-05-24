@@ -222,10 +222,16 @@ class DashboardApp:
             return
         respuesta = messagebox.askyesno("Confirmar", "¿Está seguro de que desea eliminar este alumno?")
         if respuesta:
-            alumno_id = self.lista_alumnos.item(selected_item[0])['values'][0]
+            #alumno_id = self.lista_alumnos.item(selected_item[0])['values'][0]
+
+            alumno_id = str(self.lista_alumnos.item(selected_item[0])['values'][0])
+
+
             print("ID del alumno seleccionado:", alumno_id)
             print("IDs de los alumnos antes de la eliminación:", [alumno['id'] for alumno in self.alumnos])
             self.alumnos = [alumno for alumno in self.alumnos if alumno['id'] != alumno_id]
+
+            # self.alumnos = [alumno for alumno in self.alumnos if alumno['id'] != alumno_id]
             print("IDs de los alumnos después de la eliminación:", [alumno['id'] for alumno in self.alumnos])
             guardar_alumnos(self.alumnos)  # Guardar la lista actualizada de alumnos en el archivo
             self.cargar_lista_alumnos()
