@@ -369,8 +369,15 @@ class DashboardSecretarioApp:
         self.monto.grid(row=2, column=1, pady=(0, 10))
         self.fecha_pago.grid(row=3, column=1, pady=(0, 10))
 
-        tk.Button(frame, text="Registrar Pago", command=self.registrar_pago, font=("Arial", 12)).grid(row=4, column=0, columnspan=2, pady=(20, 0))
-        tk.Button(frame, text="Editar Pago", command=self.editar_pago, font=("Arial", 12)).grid(row=5, column=0, columnspan=2, pady=(10, 0))
+        tk.Button(frame, text="Registrar Pago", command=self.registrar_pago, font=("Arial", 12)).grid(row=4, column=0,
+                                                                                                      columnspan=2,
+                                                                                                      pady=(20, 0))
+        tk.Button(frame, text="Editar Pago", command=self.editar_pago, font=("Arial", 12)).grid(row=5, column=0,
+                                                                                                columnspan=2,
+                                                                                                pady=(10, 0))
+        tk.Button(frame, text="Generar Reporte", command=self.generar_reporte, font=("Arial", 12)).grid(row=6, column=0,
+                                                                                                        columnspan=2,
+                                                                                                        pady=(10, 0))
 
         # Lista de pagos
         self.lista_pagos = ttk.Treeview(frame, columns=("ID Pago", "ID Alumno", "Monto", "Fecha"), show='headings')
@@ -378,12 +385,22 @@ class DashboardSecretarioApp:
         self.lista_pagos.heading("ID Alumno", text="ID Alumno")
         self.lista_pagos.heading("Monto", text="Monto")
         self.lista_pagos.heading("Fecha", text="Fecha")
-        self.lista_pagos.grid(row=6, column=0, columnspan=2, pady=(20, 0), sticky='nsew')
+        self.lista_pagos.grid(row=7, column=0, columnspan=2, pady=(20, 0), sticky='nsew')
 
-        frame.rowconfigure(6, weight=1)
+        frame.rowconfigure(7, weight=1)
         frame.columnconfigure(1, weight=1)
 
         self.cargar_lista_pagos()
+
+    def generar_reporte(self):
+        nombre_archivo = f"reporte_pagos_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.txt"
+        with open(nombre_archivo, "w") as archivo:
+            archivo.write("Reporte de Pagos\n")
+            archivo.write(f"Fecha: {datetime.now().strftime('%d-%m-%Y %H:%M:%S')}\n\n")
+            archivo.write("ID Pago | ID Alumno | Monto | Fecha\n")
+            for pago in self.pagos:
+                archivo.write(f"{pago['id_pago']} | {pago['id_alumno']} | {pago['monto']} | {pago['fecha']}\n")
+        messagebox.showinfo("Reporte generado", f"El reporte se ha generado como '{nombre_archivo}'")
 
     def cargar_lista_alumnos(self):
         for item in self.lista_alumnos.get_children():

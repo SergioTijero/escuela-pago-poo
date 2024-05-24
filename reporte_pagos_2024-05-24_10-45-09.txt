@@ -1,0 +1,5 @@
+Reporte de Pagos
+Fecha: 24-05-2024 10:45:09
+
+ID Pago | ID Alumno | Monto | Fecha
+P202400001 | 202400001 | 450 | 15-04-2024
