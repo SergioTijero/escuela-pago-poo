@@ -30,23 +30,19 @@ def cargar_alumnos():
 def guardar_alumnos(alumnos):
     with open('alumnos.txt', 'w') as file:
         json.dump(alumnos, file)
-
-def guardar_alumnos(alumnos):
-    with open('alumnos.txt', 'w') as file:
-        json.dump(alumnos, file)
     file.close()
 
 def cargar_pagos():
-    if not os.path.exists('pagos.txt'):
+    if not os.path.exists('old/pagos.txt'):
         return []
-    with open('pagos.txt', 'r') as file:
+    with open('old/pagos.txt', 'r') as file:
         try:
             return json.load(file)
         except json.JSONDecodeError:
             return []
 
 def guardar_pagos(pagos):
-    with open('pagos.txt', 'w') as file:
+    with open('old/pagos.txt', 'w') as file:
         json.dump(pagos, file)
 
 class LoginApp:
@@ -155,8 +151,10 @@ class DashboardApp:
         tk.Button(frame, text="Eliminar Alumno", command=self.eliminar_alumno, font=("Arial", 12)).grid(row=6, column=0, columnspan=2, pady=(10, 0))
 
         # Lista de alumnos
-        self.lista_alumnos = ttk.Treeview(frame, columns=("ID", "Nombre", "Apellido", "Correo"), show='headings')
-        self.lista_alumnos.heading("ID", text="ID")
+        # self.lista_alumnos = ttk.Treeview(frame, columns=("ID", "Nombre", "Apellido", "Correo"), show='headings')
+        self.lista_alumnos = ttk.Treeview(frame, columns=("ID Alumno", "Nombre", "Apellido", "Correo"), show='headings')
+        self.lista_alumnos.heading("ID Alumno", text="ID")
+
         self.lista_alumnos.heading("Nombre", text="Nombre")
         self.lista_alumnos.heading("Apellido", text="Apellido")
         self.lista_alumnos.heading("Correo", text="Correo")
@@ -225,10 +223,14 @@ class DashboardApp:
         respuesta = messagebox.askyesno("Confirmar", "¿Está seguro de que desea eliminar este alumno?")
         if respuesta:
             alumno_id = self.lista_alumnos.item(selected_item[0])['values'][0]
+            print("ID del alumno seleccionado:", alumno_id)
+            print("IDs de los alumnos antes de la eliminación:", [alumno['id'] for alumno in self.alumnos])
             self.alumnos = [alumno for alumno in self.alumnos if alumno['id'] != alumno_id]
+            print("IDs de los alumnos después de la eliminación:", [alumno['id'] for alumno in self.alumnos])
             guardar_alumnos(self.alumnos)  # Guardar la lista actualizada de alumnos en el archivo
             self.cargar_lista_alumnos()
             messagebox.showinfo("Éxito", "Alumno eliminado correctamente")
+
 
     def cargar_lista_alumnos(self):
         for item in self.lista_alumnos.get_children():
