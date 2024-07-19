@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -6,7 +5,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from config import Config
-from forms import FormularioPago, FormularioBusqueda, FormularioLogin
+from forms import FormularioPago, FormularioBusqueda, FormularioLogin, FormularioEditarAlumno, FormularioEditarPago
 from models import db, Usuario, Alumno, Pago
 import sqlalchemy.exc
 
@@ -76,4 +75,34 @@ def buscar():
 @login_required
 def detalle_alumno(alumno_id):
     alumno = Alumno.query.get_or_404(alumno_id)
-    pagos = Pago.query.filter_by(alumno_id=alumno.id)
+    pagos = Pago.query.filter_by(alumno_id=alumno.id).all()
+    return render_template('detalle_alumno.html', alumno=alumno, pagos=pagos)
+
+@app.route('/alumno/editar/<uuid:alumno_id>', methods=['GET', 'POST'])
+@login_required
+def editar_alumno(alumno_id):
+    alumno = Alumno.query.get_or_404(alumno_id)
+    form = FormularioEditarAlumno(obj=alumno)
+    if form.validate_on_submit():
+        alumno.nombre = form.nombre.data
+        alumno.nombre_apoderado = form.nombre_apoderado.data
+        db.session.commit()
+        flash('Alumno actualizado exitosamente', 'success')
+        return redirect(url_for('detalle_alumno', alumno_id=alumno.id))
+    return render_template('editar_alumno.html', form=form, alumno=alumno)
+
+@app.route('/pago/editar/<int:pago_id>', methods=['GET', 'POST'])
+@login_required
+def editar_pago(pago_id):
+    pago = Pago.query.get_or_404(pago_id)
+    form = FormularioEditarPago(obj=pago)
+    if form.validate_on_submit():
+        pago.monto = form.monto.data
+        pago.concepto = form.concepto.data
+        db.session.commit()
+        flash('Pago actualizado exitosamente', 'success')
+        return redirect(url_for('detalle_alumno', alumno_id=pago.alumno_id))
+    return render_template('editar_pago.html', form=form, pago=pago)
+
+if __name__ == '__main__':
+    app.run(debug=True)

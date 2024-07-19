@@ -1,16 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Login</h1>
+    <h1>Iniciar Sesión</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+            {% for category, message in messages %}
+                <li class="alert alert-{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
     <form method="POST">
         {{ form.hidden_tag() }}
         <p>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}
+            {{ form.nombre_usuario.label }}<br>
+            {{ form.nombre_usuario(size=32) }}
         </p>
         <p>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}
+            {{ form.contraseña.label }}<br>
+            {{ form.contraseña(size=32) }}
         </p>
         <p>{{ form.submit() }}</p>
     </form>

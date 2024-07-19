@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Editar Pago</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.monto.label }}<br>
+            {{ form.monto(size=32) }}
+        </p>
+        <p>
+            {{ form.concepto.label }}<br>
+            {{ form.concepto(size=32) }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

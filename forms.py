@@ -17,3 +17,13 @@ class FormularioLogin(FlaskForm):
     nombre_usuario = StringField('Nombre de Usuario', validators=[DataRequired(), Length(min=4, max=150)])
     contraseña = PasswordField('Contraseña', validators=[DataRequired(), Length(min=4, max=150)])
     submit = SubmitField('Iniciar Sesión')
+
+class FormularioEditarAlumno(FlaskForm):
+    nombre = StringField('Nombre del Alumno', validators=[DataRequired()])
+    nombre_apoderado = StringField('Nombre del Apoderado', validators=[DataRequired()])
+    submit = SubmitField('Guardar Cambios')
+
+class FormularioEditarPago(FlaskForm):
+    monto = FloatField('Monto', validators=[DataRequired()])
+    concepto = StringField('Concepto', validators=[DataRequired()])
+    submit = SubmitField('Guardar Cambios')

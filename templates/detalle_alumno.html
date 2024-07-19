@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{ alumno.nombre }}</h1>
+    <h2>Apoderado: {{ alumno.nombre_apoderado }}</h2>
+    <a href="{{ url_for('editar_alumno', alumno_id=alumno.id) }}">Editar Alumno</a>
+    <h3>Pagos:</h3>
+    <ul>
+    {% for pago in pagos %}
+        <li>{{ pago.fecha_hora }} - {{ pago.concepto }}: ${{ pago.monto }} <a href="{{ url_for('editar_pago', pago_id=pago.id) }}">Editar</a></li>
+    {% endfor %}
+    </ul>
+    <a href="{{ url_for('buscar') }}">Volver a la búsqueda</a>
+{% endblock %}
