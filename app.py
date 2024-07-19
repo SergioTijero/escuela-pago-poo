@@ -76,7 +76,8 @@ def buscar():
 def detalle_alumno(alumno_id):
     alumno = Alumno.query.get_or_404(alumno_id)
     pagos = Pago.query.filter_by(alumno_id=alumno.id).all()
-    return render_template('detalle_alumno.html', alumno=alumno, pagos=pagos)
+    form = FormularioPago()
+    return render_template('detalle_alumno.html', alumno=alumno, pagos=pagos, form=form)
 
 @app.route('/alumno/editar/<uuid:alumno_id>', methods=['GET', 'POST'])
 @login_required
@@ -103,6 +104,18 @@ def editar_pago(pago_id):
         flash('Pago actualizado exitosamente', 'success')
         return redirect(url_for('detalle_alumno', alumno_id=pago.alumno_id))
     return render_template('editar_pago.html', form=form, pago=pago)
+
+@app.route('/alumno/<uuid:alumno_id>/añadir_pago', methods=['POST'])
+@login_required
+def añadir_pago(alumno_id):
+    form = FormularioPago()
+    alumno = Alumno.query.get_or_404(alumno_id)
+    if form.validate_on_submit():
+        pago = Pago(alumno_id=alumno.id, monto=form.monto.data, concepto=form.concepto.data, fecha_hora=datetime.now())
+        db.session.add(pago)
+        db.session.commit()
+        flash('Pago añadido exitosamente', 'success')
+    return redirect(url_for('detalle_alumno', alumno_id=alumno.id))
 
 if __name__ == '__main__':
     app.run(debug=True)

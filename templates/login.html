@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Iniciar Sesión</h1>
+<section class="login-section">
+    <div>
+        <img src="{{ url_for('static', filename='images/logo.png') }}">
+    </div>
+    <div>
+        <h1>Iniciar Sesión</h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <ul>
@@ -11,16 +16,19 @@
             </ul>
         {% endif %}
     {% endwith %}
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.nombre_usuario.label }}<br>
-            {{ form.nombre_usuario(size=32) }}
-        </p>
-        <p>
-            {{ form.contraseña.label }}<br>
-            {{ form.contraseña(size=32) }}
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.nombre_usuario.label }}<br>
+                {{ form.nombre_usuario(size=32) }}
+            </p>
+            <p>
+                {{ form.contraseña.label }}<br>
+                {{ form.contraseña(size=32) }}
+            </p>
+            <p>{{ form.submit() }}</p>
+        </form>
+    </div>
+</section>
+
 {% endblock %}

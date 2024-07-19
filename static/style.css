@@ -11,6 +11,32 @@ body {
     overflow: hidden;
 }
 
+header {
+    background: #333;
+    color: #fff;
+    padding: 10px 0;
+}
+
+header ul {
+    padding: 0;
+    list-style: none;
+    text-align: center;
+}
+
+header ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+header ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+header ul li a:hover {
+    text-decoration: underline;
+}
+
 ul {
     list-style: none;
     padding: 0;
@@ -65,4 +91,16 @@ form input[type="submit"] {
 
 form input[type="submit"]:hover {
     background-color: #45a049;
+}
+
+section.login-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    height: 80vh !important;
+    align-items: center;
+}
+
+.login-section > div {
+    width: 50%;
 }
