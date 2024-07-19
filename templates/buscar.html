@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Buscar Alumnos</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.busqueda.label }}<br>
+            {{ form.busqueda(size=32) }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    <h2>Resultados de la búsqueda</h2>
+    <ul>
+    {% for alumno in alumnos %}
+        <li><a href="{{ url_for('detalle_alumno', alumno_id=alumno.id) }}">{{ alumno.nombre }} (Apoderado: {{ alumno.nombre_apoderado }})</a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

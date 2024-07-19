@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Payment System</title>
+    <title>Sistema de Pagos de Alumnos</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
         {% if current_user.is_authenticated %}
-            <p>Welcome, {{ current_user.username }}! <a href="{{ url_for('logout') }}">Logout</a></p>
+            <p>Bienvenido, {{ current_user.nombre_usuario }}! <a href="{{ url_for('logout') }}">Cerrar sesión</a></p>
         {% else %}
-            <p><a href="{{ url_for('login') }}">Login</a></p>
+            <p><a href="{{ url_for('login') }}">Iniciar sesión</a></p>
         {% endif %}
         {% block content %}
         {% endblock %}

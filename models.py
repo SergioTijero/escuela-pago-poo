@@ -1,23 +1,24 @@
-# models.py
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
+import uuid
+from sqlalchemy.dialects.postgresql import UUID
 
 db = SQLAlchemy()
 
-class User(UserMixin, db.Model):
+class Usuario(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
+    nombre_usuario = db.Column(db.String(150), unique=True, nullable=False)
+    contraseña = db.Column(db.String(150), nullable=False)
 
-class Student(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    guardian_name = db.Column(db.String(100), nullable=False)
-    payments = db.relationship('Payment', backref='student', lazy=True)
+class Alumno(db.Model):
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    nombre = db.Column(db.String(100), nullable=False)
+    nombre_apoderado = db.Column(db.String(100), nullable=False)
+    pagos = db.relationship('Pago', backref='alumno', lazy=True)
 
-class Payment(db.Model):
+class Pago(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
-    amount = db.Column(db.Float, nullable=False)
-    concept = db.Column(db.String(100), nullable=False)
-    date_time = db.Column(db.DateTime, nullable=False)
+    alumno_id = db.Column(UUID(as_uuid=True), db.ForeignKey('alumno.id'), nullable=False)
+    monto = db.Column(db.Float, nullable=False)
+    concepto = db.Column(db.String(100), nullable=False)
+    fecha_hora = db.Column(db.DateTime, nullable=False)

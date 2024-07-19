@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Registrar Pago</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+            {% for category, message in messages %}
+                <li class="alert alert-{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <form method="POST">
+        {{ pago_form.hidden_tag() }}
+        <p>
+            {{ pago_form.nombre_alumno.label }}<br>
+            {{ pago_form.nombre_alumno(size=32) }}
+        </p>
+        <p>
+            {{ pago_form.nombre_apoderado.label }}<br>
+            {{ pago_form.nombre_apoderado(size=32) }}
+        </p>
+        <p>
+            {{ pago_form.monto.label }}<br>
+            {{ pago_form.monto(size=32) }}
+        </p>
+        <p>
+            {{ pago_form.concepto.label }}<br>
+            {{ pago_form.concepto(size=32) }}
+        </p>
+        <p>{{ pago_form.submit() }}</p>
+    </form>
+
+    <h1>Buscar Alumnos</h1>
+    <form action="{{ url_for('buscar') }}" method="POST">
+        {{ busqueda_form.hidden_tag() }}
+        <p>
+            {{ busqueda_form.busqueda.label }}<br>
+            {{ busqueda_form.busqueda(size=32) }}
+        </p>
+        <p>{{ busqueda_form.submit() }}</p>
+    </form>
+{% endblock %}

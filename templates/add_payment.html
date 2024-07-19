@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Add Payment</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+            {% for category, message in messages %}
+                <li class="alert alert-{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.student_name.label }}<br>
+            {{ form.student_name(size=32) }}
+        </p>
+        <p>
+            {{ form.guardian_name.label }}<br>
+            {{ form.guardian_name(size=32) }}
+        </p>
+        <p>
+            {{ form.amount.label }}<br>
+            {{ form.amount(size=32) }}
+        </p>
+        <p>
+            {{ form.concept.label }}<br>
+            {{ form.concept(size=32) }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}
