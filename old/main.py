@@ -7,14 +7,14 @@ import os
 def cargar_usuarios():
     if not os.path.exists('../usuarios.txt'):
         return []
-    with open('../usuarios.txt', 'r') as file:
+    with open('../old_v2/usuarios.txt', 'r') as file:
         try:
             return json.load(file)
         except json.JSONDecodeError:
             return []
 
 def guardar_usuarios(usuarios):
-    with open('../usuarios.txt', 'w') as file:
+    with open('../old_v2/usuarios.txt', 'w') as file:
         json.dump(usuarios, file)
 
 def cargar_pagos():
