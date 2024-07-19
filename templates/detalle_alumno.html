@@ -13,17 +13,17 @@
     </ul>
 
     <h3>Añadir Nuevo Pago</h3>
-    <form method="POST" action="{{ url_for('añadir_pago', alumno_id=alumno.id) }}">
-        {{ form.hidden_tag() }}
+    <form method="POST" action="{{ url_for('add_pago', alumno_id=alumno.id) }}">
+        {{ nuevo_pago_form.hidden_tag() }}
         <p>
-            {{ form.monto.label }}<br>
-            {{ form.monto(size=32) }}
+            {{ nuevo_pago_form.monto.label }}<br>
+            {{ nuevo_pago_form.monto(size=32) }}
         </p>
         <p>
-            {{ form.concepto.label }}<br>
-            {{ form.concepto(size=32) }}
+            {{ nuevo_pago_form.concepto.label }}<br>
+            {{ nuevo_pago_form.concepto(size=32) }}
         </p>
-        <p>{{ form.submit() }}</p>
+        <p>{{ nuevo_pago_form.submit() }}</p>
     </form>
 
     <a href="{{ url_for('buscar') }}">Volver a la búsqueda</a>

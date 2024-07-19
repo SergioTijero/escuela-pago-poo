@@ -5,7 +5,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from config import Config
-from forms import FormularioPago, FormularioBusqueda, FormularioLogin, FormularioEditarAlumno, FormularioEditarPago
+from forms import FormularioPago, FormularioBusqueda, FormularioLogin, FormularioEditarAlumno, FormularioEditarPago, FormularioNuevoPago
 from models import db, Usuario, Alumno, Pago
 import sqlalchemy.exc
 
@@ -76,8 +76,8 @@ def buscar():
 def detalle_alumno(alumno_id):
     alumno = Alumno.query.get_or_404(alumno_id)
     pagos = Pago.query.filter_by(alumno_id=alumno.id).all()
-    form = FormularioPago()
-    return render_template('detalle_alumno.html', alumno=alumno, pagos=pagos, form=form)
+    nuevo_pago_form = FormularioNuevoPago()
+    return render_template('detalle_alumno.html', alumno=alumno, pagos=pagos, nuevo_pago_form=nuevo_pago_form)
 
 @app.route('/alumno/editar/<uuid:alumno_id>', methods=['GET', 'POST'])
 @login_required
@@ -105,10 +105,10 @@ def editar_pago(pago_id):
         return redirect(url_for('detalle_alumno', alumno_id=pago.alumno_id))
     return render_template('editar_pago.html', form=form, pago=pago)
 
-@app.route('/alumno/<uuid:alumno_id>/añadir_pago', methods=['POST'])
+@app.route('/alumno/<uuid:alumno_id>/add_pago', methods=['POST'])
 @login_required
-def añadir_pago(alumno_id):
-    form = FormularioPago()
+def add_pago(alumno_id):
+    form = FormularioNuevoPago()
     alumno = Alumno.query.get_or_404(alumno_id)
     if form.validate_on_submit():
         pago = Pago(alumno_id=alumno.id, monto=form.monto.data, concepto=form.concepto.data, fecha_hora=datetime.now())

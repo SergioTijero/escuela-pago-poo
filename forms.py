@@ -27,3 +27,8 @@ class FormularioEditarPago(FlaskForm):
     monto = FloatField('Monto', validators=[DataRequired()])
     concepto = StringField('Concepto', validators=[DataRequired()])
     submit = SubmitField('Guardar Cambios')
+
+class FormularioNuevoPago(FlaskForm):
+    monto = FloatField('Monto', validators=[DataRequired()])
+    concepto = StringField('Concepto', validators=[DataRequired()])
+    submit = SubmitField('Añadir Pago')
